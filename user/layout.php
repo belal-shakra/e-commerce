@@ -1,13 +1,17 @@
-<?php include "functions/assets.php" ?>
+<?php
+  function asset($side = ""){
+    return (basename($_SERVER["SCRIPT_FILENAME"]) != "index.php")? ".." : $side;
+  }
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "./user/partials/head.php" ?>
+  <?php include asset("user") . "/partials/head.php" ?>
 
   <body class="goto-here">
 
-    <?php include "./user/partials/navbar.php" ?>
+    <?php include asset("user") . "/partials/navbar.php" ?>
 
 
 
