@@ -25,6 +25,4 @@
     <link rel="stylesheet" href="<?php echo asset("user") ?>/assets/css/flaticon.css">
     <link rel="stylesheet" href="<?php echo asset("user") ?>/assets/css/icomoon.css">
     <link rel="stylesheet" href="<?php echo asset("user") ?>/assets/css/style.css">
-
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"> -->
 </head>
