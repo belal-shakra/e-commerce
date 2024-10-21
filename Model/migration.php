@@ -1,6 +1,7 @@
 <?php
 
 namespace Model;
+include "Model.php";
 include "Category.php";
 include "User.php";
 include "Admin.php";
@@ -16,6 +17,7 @@ include "CouponUser.php";
 include "Message.php";
 
 
+new Model();
 new Category();
 new User();
 new Admin();

@@ -7,10 +7,10 @@ use PDOException;
 
 class Model {
 
-  private const DATABASE = "e-commerce";
+  private const DATABASE = "ecommerce";
   private const SERVERNAME = "localhost";
-  private const USERNAME = "belal_shakra";
-  private const PASSWORD = "Qwer?123";
+  private const USERNAME = "root";
+  private const PASSWORD = "";
   protected $conn;
 
   protected $table;
@@ -19,8 +19,8 @@ class Model {
 
 
   function __construct(){
+    $this->create_database(self::DATABASE);
     $this->open(self::SERVERNAME, self::USERNAME, self::PASSWORD);
-    // $this->create_database(self::DATABASE);
   }
 
   function __destruct(){
@@ -32,7 +32,6 @@ class Model {
   private function open($servername, $username, $password){
 
     try {
-      // echo "mysql:host=$servername;dbname=".self::DATABASE."<br>";
       $this->conn = new PDO("mysql:host=$servername;dbname=".self::DATABASE, $username, $password);
       $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -44,9 +43,10 @@ class Model {
   private function create_database($database){
 
     try {
-    
-      $sql_query = "CREATE DATABASE $database";
-      $this->conn->exec($sql_query);
+      $conn = new PDO("mysql:host=".self::SERVERNAME, self::USERNAME, self::PASSWORD);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      $sql_query = "CREATE DATABASE IF NOT EXISTS ". self::DATABASE;
+      $conn->exec($sql_query);
 
     
     }catch(PDOException $error){
@@ -54,15 +54,7 @@ class Model {
     }
   }
 
-  private function create_table($query){
-
-    try {
-      $this->conn->exec($query);
-
-    }catch(PDOException $error){
-      echo $error->getMessage();
-    }
-  }
+  private function create_table(){}
 
 
 
