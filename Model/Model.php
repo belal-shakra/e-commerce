@@ -1,163 +1,168 @@
 <?php
 
-namespace mode;
+namespace Model;
 
+use PDO;
+use PDOException;
 
-// class Model {
+class Model {
 
-//   private const DATABASE = "e-commerce";
-//   private const SERVERNAME = "localhost";
-//   private const USERNAME = "belal_shakra";
-//   private const PASSWORD = "Qwer?123";
-//   private $conn;
+  private const DATABASE = "e-commerce";
+  private const SERVERNAME = "localhost";
+  private const USERNAME = "belal_shakra";
+  private const PASSWORD = "Qwer?123";
+  protected $conn;
 
-//   protected $table;
-//   protected $pk = "id";
-
-
-
-//   function __construct(){
-//     // $this->open(self::SERVERNAME, self::USERNAME, self::PASSWORD);
-//     // $this->create_database(self::DATABASE);
-//   }
-
-//   function __destruct(){
-//     $this->conn = null;
-//   }
+  protected $table;
+  protected $pk = "id";
 
 
 
-//   private function open($servername, $username, $password){
+  function __construct(){
+    $this->open(self::SERVERNAME, self::USERNAME, self::PASSWORD);
+    // $this->create_database(self::DATABASE);
+  }
 
-//     try {
-//       $this->conn = new PDO("mysql:host=$servername;dbname=myDB", $username, $password);
-//       $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  function __destruct(){
+    $this->conn = null;
+  }
 
-//     } catch(PDOException $error) {
-//       echo "Connection failed: " . $error->getMessage();
-//     }
-//   }
 
-//   private function create_database($database){
 
-//     try {
+  private function open($servername, $username, $password){
+
+    try {
+      // echo "mysql:host=$servername;dbname=".self::DATABASE."<br>";
+      $this->conn = new PDO("mysql:host=$servername;dbname=".self::DATABASE, $username, $password);
+      $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    } catch(PDOException $error) {
+      echo "Connection failed: " . $error->getMessage();
+    }
+  }
+
+  private function create_database($database){
+
+    try {
     
-//       $sql_query = "CREATE DATABASE $database";
-//       $this->conn->exec($sql_query);
+      $sql_query = "CREATE DATABASE $database";
+      $this->conn->exec($sql_query);
 
     
-//     }catch(PDOException $error){
-//       echo $error->getMessage();
-//     }
-//   }
+    }catch(PDOException $error){
+      echo $error->getMessage();
+    }
+  }
 
-//   private function create_table($query){
+  private function create_table($query){
 
-//     try {
-//       $this->conn->exec($query);
+    try {
+      $this->conn->exec($query);
 
-//     }catch(PDOException $error){
-//       echo $error->getMessage();
-//     }
-//   }
+    }catch(PDOException $error){
+      echo $error->getMessage();
+    }
+  }
 
 
 
-//   public function create(array $data){
-//     $query = "INSERT INTO $this->table";
-//     $columns = "(";
-//     $values = "VAULES (";
+  public function create(array $data){
+    $query = "INSERT INTO $this->table";
+    $columns = "(";
+    $values = "VALUES (";
 
-//     foreach ($data as $key => $value) {
-//       $columns .= "$key";
-//       ($value != end($data))? $columns .= ", ": $columns .= ")";
+    foreach ($data as $key => $value) {
+      $columns .= "$key";
+      ($value != end($data))? $columns .= ", ": $columns .= ")";
       
-//       $values .= ":$key";
-//       ($value != end($data))? $values .= ", ": $values .= ")";
-//     }
-//     $query .= " $columns $values";
+      $values .= "'$value'";
+      ($value != end($data))? $values .= ", ": $values .= ")";
+    }
+    $query .= " $columns $values";
+
+    try {
+      $this->conn->exec($query);
+
+    }catch(PDOException $error){
+      echo $error->getMessage();
+    }
+  }
 
 
+  public function select($pk, $operator,  ...$data){
+    $query = "SELECT ";
 
-//     try {
-//       $stmt = $this->conn->prepare($query);
-
-//       foreach ($data as $key => $value) {
-//         $stmt->bindParm(":$key", $$key);
-//         $$key = $value;
-//       }
-//       $stmt->execute();
-
-//     }catch(PDOException $error){
-//       echo $error->getMessage();
-//     }
-//   }
+    foreach ($data as $value) {
+      $query .= "$value";
+      ($value != end($data))? $query .= ", ": $query .= " ";
+    }
+    $query .= "FROM $this->table WHERE $this->pk $operator $pk";
 
 
-//   protected function select($pk, ...$data){
-//     $query = "SELECT ";
+    echo $query."<br>";
+    try {
+      $stmt = $this->conn->prepare($query);
+      $stmt->execute();
 
-//     foreach ($data as $value) {
-//       $query .= "$value";
-//       ($value != end($data))? $query .= ", ": $query .= " ";
-//     }
-//     $query .= "FROM $this->table WHERE $this->pk=$pk";
+      return $stmt->fetch();
+    }catch(PDOException $error){
+      echo $error->getMessage();
+    }
+  }
+
+  public function where($query){
+
+    try {
+      $stmt = $this->conn->prepare($query);
+      $stmt->execute();
+
+      return $stmt->fetchAll();
+    }catch(PDOException $error){
+      echo $error->getMessage();
+    }
+  }
+
+  public function find($pk){
+    try {
+      $stmt = $this->conn->prepare("SELECT * FROM $this->table WHERE $this->pk=$pk");
+      $stmt->execute();
+
+      return $stmt->fetch();
+    }catch(PDOException $error){
+      echo $error->getMessage();
+    }
+  }
 
 
-//     return $query;
-//     try {
-//       // $stmt = $this->conn->prepare($sql_query);
-//       // $stmt->execute();
+  public function update(array $data, $pk){
+    $query = "UPDATE $this->table SET ";
 
-//       // return $stmt->fetchAll();
-//     }catch(PDOException $error){
-//       echo $error->getMessage();
-//     }
-//   }
-
-
-//   protected function find($pk){
-//     try {
-//       $stmt = $this->conn->prepare("SELECT * FROM $this->table WHERE $this->pk=$pk");
-//       $stmt->execute();
-
-//       return $stmt->fetchAll();
-//     }catch(PDOException $error){
-//       echo $error->getMessage();
-//     }
-//   }
-
-
-//   protected function update(array $data, $pk){
-//     $query = "UPDATE $this->table SET ";
-
-//     foreach ($data as $key => $value) {
-//       $query .= "$key='$value'";
-//       ($value != end($data))? $query .= ", ": $query .= " ";
+    foreach ($data as $key => $value) {
+      $query .= "$key='$value'";
+      ($value != end($data))? $query .= ", ": $query .= " ";
       
-//     }
-//     $query .= "WHERE $this->pk=$pk";
+    }
+    $query .= "WHERE $this->pk=$pk";
 
-//     return $query;
+    return $query;
 
-//     try {
-//       $stmt = $this->conn->prepare($query);
-//       $stmt->execute();
+    try {
+      $stmt = $this->conn->prepare($query);
+      $stmt->execute();
 
-//     }catch(PDOException $error){
-//       echo $error->getMessage();
-//     }
-//   }
+    }catch(PDOException $error){
+      echo $error->getMessage();
+    }
+  }
 
 
-//   protected function delete($pk){
-//     try {
-//       $this->conn->exec("DELETE FROM $this->table WHERE $this->pk=$pk");
+  public function delete($pk){
+    try {
+      $this->conn->exec("DELETE FROM $this->table WHERE $this->pk=$pk");
 
-//     }catch(PDOException $error){
-//       echo $error->getMessage();
-//     }
-//   }
+    }catch(PDOException $error){
+      echo $error->getMessage();
+    }
+  }
 
-// }
-
+}

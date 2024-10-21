@@ -7,12 +7,11 @@ use PDOException;
 require_once "./Model.php";
 
 
-class User extends Model {
+class Review extends Model {
 
   function __construct(){
     parent::__construct();
-
-    $this->table = "users";
+    $this->table = "reviews";
 
     $this->create_table();
   }
@@ -21,15 +20,15 @@ class User extends Model {
   public function create_table(){
     $query = <<<QUERY
       CREATE TABLE IF NOT EXISTS $this->table (
-          id INT AUTO_INCREMENT PRIMARY KEY,
-          username VARCHAR(50) NOT NULL UNIQUE,
-          first_name VARCHAR(50) NOT NULL,
-          last_name VARCHAR(50) NOT NULL,
-          email VARCHAR(100) NOT NULL UNIQUE,
-          phone VARCHAR(20),
-          password VARCHAR(255) NOT NULL,
+          id SERIAL PRIMARY KEY,
+          user_id INTEGER REFERENCES users(id),
+          product_id INTEGER REFERENCES products(id),
+          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+          FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+          rating INTEGER NOT NULL,
+          review_text TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     QUERY;
 
