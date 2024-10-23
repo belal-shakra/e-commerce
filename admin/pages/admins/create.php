@@ -20,39 +20,63 @@
 
 
   <div class="row">
-    <div class="col-sm-12 col-lg-6">
+    <div class="col-sm-12 col-lg-8">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Add Admin</h5>
 
-          <form action="" method="POST">
+          <form action="../../../Controller/admin/admins/create.php" method="POST">
+            <div class="row my-2">
+              <div class="col-sm-12 col-lg-4">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" name="first_name">
+                <span class="text-danger">
+                  <?= (isset($_SESSION["add_admin_errors"]["first_name_error"])) ? $_SESSION["add_admin_errors"]["first_name_error"] : null ; ?>
+                </span>
+              </div>
+              <div class="col-sm-12 col-lg-4">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" name="last_name">
+                <span class="text-danger">
+                  <?= (isset($_SESSION["add_admin_errors"]["first_name_error"])) ? $_SESSION["add_admin_errors"]["last_name_error"] : null ; ?>
+                </span>
+              </div>
+
+              <div class="col-sm-12 col-lg-4">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" name="username">
+              </div>
+            </div>
+
+
+
+            <div class="my-2">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" name="email">
+            </div>
+
+
+            <div class="my-2">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" name="email">
+            </div>
+
             <div class="row my-2">
               <div class="col-sm-12 col-lg-6">
-                <label for="inputNanme4" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="inputNanme4">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" name="password">
               </div>
               <div class="col-sm-12 col-lg-6">
-                <label for="inputNanme4" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="inputNanme4">
+                <label class="form-label">Password Confirmation</label>
+                <input type="password" class="form-control" name="password_confirmation">
               </div>
-            </div>
-
-            <div class="my-2">
-              <label class="form-label">Username</label>
-              <input type="text" class="form-control" >
-            </div>
-
-            <div class="my-2">
-              <label for="inputEmail4" class="form-label">Email</label>
-              <input type="email" class="form-control" id="inputEmail4">
             </div>
 
             <div class="my-2">
               <label class="form-label">Role</label>
               <select name="role" class="form-control">
-                <option>Select</option>
                 <option value="admin">Admin</option>
-                <option value="admin">Super Admin</option>
+                <option value="super admin">Super Admin</option>
               </select>
             </div>
 
