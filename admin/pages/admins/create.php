@@ -1,4 +1,5 @@
 <?php
+  session_start();
 	$title = 'Add New Admins';
 	$admins = 'active';
 	ob_start();
@@ -21,6 +22,13 @@
 
   <div class="row">
     <div class="col-sm-12 col-lg-8">
+
+      <?php if(isset($_SESSION["addingNewAdminSuccessfully"])): ?>
+        <div class="alert alert-success">
+          <?php echo $_SESSION["addingNewAdminSuccessfully"] ?>
+        </div>
+      <?php endif ?>
+
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Add Admin</h5>
@@ -97,4 +105,5 @@
 <?php
   $content = ob_get_clean();
   include '../../layout.php';
+  unset($_SESSION["addingNewAdminSuccessfully"]);
 ?>

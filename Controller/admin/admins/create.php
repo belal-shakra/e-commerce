@@ -81,10 +81,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   $newAdmin = new AddNewAdmin();
   $admin = new Admin();
 
+  var_dump($_REQUEST);
+
   if ($newAdmin->validation($_POST)) {
     unset($_POST["password_confirmation"]);
     $_POST["password"] = password_hash($_POST["password"], PASSWORD_BCRYPT);
     $admin->insert($_POST);
+
+
+    $_SESSION["addingNewAdminSuccessfully"] = "The admin addedd successfully.";
+
+    // var_dump($_SESSION["addingNewAdminSuccessfully"]);
+
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    die;
   }
 
 }
